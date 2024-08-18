@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <climits>
 #include <sstream>
+#include <cstddef>
 
 // Binary operators
 template <std::size_t N>

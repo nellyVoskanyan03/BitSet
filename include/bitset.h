@@ -5,6 +5,7 @@
 #include <climits>
 #include <sstream>
 #include <bitset>
+#include <cstddef>
 
 #ifndef BBITSET_H
 #define BBITSET_H

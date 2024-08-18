@@ -12,7 +12,6 @@
 template<std::size_t N>
 class bitSet {
 private:
-
 	static constexpr std::size_t BITS_PER_BYTE = 8;
 	static constexpr std::size_t NUM_BYTES = (N + BITS_PER_BYTE - 1) / BITS_PER_BYTE;
 
@@ -21,43 +20,25 @@ private:
 	void validatePosition(std::size_t pos) const;
 public:
 	class reference {
-		friend class bitset;
+		friend class bitSet;
 
 	private:
 		std::byte& byte;
 		std::size_t bit_pos;
 
+		reference(std::byte& byte_ref, std::size_t bit_pos);
 
 	public:
+		reference& operator=(bool value);
+		reference& operator=(const reference& other);
 
-		reference(std::byte& byte_ref, std::size_t bit_pos) : byte(byte_ref), bit_pos(bit_pos) {}
-		reference& operator=(bool value) {
-			if (value) {
-				byte |= (std::byte{ 1 } << bit_pos);
-			}
-			else {
-				byte &= ~(std::byte{ 1 } << bit_pos);
-			}
-			return *this;
-		}
-
-		reference& operator=(const reference& other) {
-			return *this = static_cast<bool>(other);
-		}
-
-		operator bool() const {
-			return static_cast<bool>(byte & (std::byte{ 1 } << bit_pos));
-		}
-
-		reference& flip() {
-			byte ^= (std::byte{ 1 } << bit_pos); // Toggle the bit
-			return *this;
-		}
+		operator bool() const;
+		reference& flip();
 	};
 
 
-	constexpr bitSet() noexcept;
-	constexpr bitSet(unsigned long val) noexcept;
+	bitSet();
+	explicit bitSet(unsigned long val);
 	explicit bitSet(const std::string& str);
 
 	bitSet(const bitSet<N>& other);
@@ -90,8 +71,8 @@ public:
 	unsigned long long to_ullong() const;
 
 	std::string to_string();
-
-
 };
+
+#include "bitset.ipp"
 
 #endif //  BBITSET_H

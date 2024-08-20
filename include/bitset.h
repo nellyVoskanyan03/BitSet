@@ -49,9 +49,7 @@ public:
 	bitSet<N>& operator=(bitSet<N>&& other) noexcept;
 
 	bool operator[](std::size_t pos) const;
-	reference operator[](std::size_t pos) {
-		return reference(data[pos / BITS_PER_BYTE], pos % BITS_PER_BYTE);
-	}
+	reference operator[](std::size_t pos);
 
 	bool operator==(const bitSet& rhs) const;
 	bool operator!=(const bitSet& rhs) const;

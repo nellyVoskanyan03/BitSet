@@ -121,6 +121,10 @@ bool bitSet<N>::operator[](std::size_t pos) const {
 	return static_cast<bool>(data[pos / BITS_PER_BYTE] & (std::byte{ 1 } << (pos % BITS_PER_BYTE)));
 }
 
+template<std::size_t N>
+bitSet<N>::reference bitSet<N>::operator[](std::size_t pos) {
+	return reference(data[pos / BITS_PER_BYTE], pos % BITS_PER_BYTE);
+}
 // Comparing operators
 template<std::size_t N>
 bool bitSet<N>::operator==(const bitSet& rhs) const {

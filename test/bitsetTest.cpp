@@ -11,17 +11,17 @@ TEST(constructionTest, default_constructor) {
 
 TEST(constructionTest, ulong_constructor) {
     bitSet<32> b(0b10101010);
-    EXPECT_TRUE(b[1]);
     EXPECT_FALSE(b[0]);
-    EXPECT_TRUE(b[3]);
+    EXPECT_TRUE(b[1]);
     EXPECT_FALSE(b[2]);
+    EXPECT_TRUE(b[3]);
 }
 
 TEST(constructionTest, string_constructor) {
     std::string bit_string = "101010";
     bitSet<6> b(bit_string);
-    EXPECT_TRUE(b[1]);
     EXPECT_FALSE(b[0]);
+    EXPECT_TRUE(b[1]);
     EXPECT_FALSE(b[2]);
 }
 
@@ -37,7 +37,9 @@ TEST(constructionTest, move_constructor) {
     bitSet<8> moved(std::move(original));
 
     EXPECT_EQ(moved.to_string(), "11001100");
-    EXPECT_EQ(original.to_string(), "00000000");
+    for (size_t i = 0; i < 8; ++i) {
+        EXPECT_FALSE(original[i]);
+    }
 }
 
 // convertTest
@@ -59,7 +61,6 @@ TEST(convertTest, to_ullong) {
 // operationTest
 TEST(operationTest, copy_assignement_operator) {
     bitSet<8> b1(0b10101010);
-
     bitSet<8> b2;
 
     b2 = b1;
@@ -71,12 +72,35 @@ TEST(operationTest, copy_assignement_operator) {
 
 TEST(operationTest, move_assignement_operator) {
     bitSet<8> b1(0b11001100);
-
     bitSet<8> b2;
+
     b2 = std::move(b1);
 
     EXPECT_EQ(b2.to_string(), "11001100");
-    EXPECT_EQ(b1.to_string(), "00000000");
+    for (size_t i = 0; i < 8; ++i) {
+        EXPECT_FALSE(b1[i]);
+    }
+}
+
+TEST(operationTest, index_operators) {
+    const bitSet<8> b1(0b11001100);
+    auto index1 = b1[0];
+
+    bitSet<8> b2(0b11001100);
+    auto index2 = b2[0];
+
+    EXPECT_FALSE(index1);
+    index1 = true;
+    EXPECT_FALSE(b1[0]);
+
+    EXPECT_TRUE((std::is_same_v<decltype(index1), bool>));
+    EXPECT_TRUE((std::is_same_v<decltype(index2), typename bitSet<8>::reference>));
+
+    EXPECT_FALSE(index2);
+    EXPECT_FALSE(b2[0]);
+    index2 = true;
+    EXPECT_TRUE(index2);
+    EXPECT_TRUE(b2[0]);
 }
 
 TEST(operationTest, operation_and) {
@@ -109,21 +133,17 @@ TEST(operationTest, operation_not) {
 TEST(operationTest, operation_shift_left) {
     bitSet<8> b(0b00001111); 
     bitSet<8> result = b << 2; 
-
     EXPECT_EQ(result.to_string(), "00111100");
 }
 
 TEST(operationTest, operation_shift_right) {
     bitSet<8> b(0b11110000); 
     bitSet<8> result = b >> 3;
-
     EXPECT_EQ(result.to_string(), "00011110");
 }
 
-
 // referenceTest
 TEST(referenceTest, constructor) {
-    std::byte byte = std::byte{ 0 };
     bitSet<8> b;
     auto ref = b[3];
 
@@ -131,7 +151,6 @@ TEST(referenceTest, constructor) {
 }
 
 TEST(referenceTest, assignement_operator) {
-    std::byte byte = std::byte{ 0 };
     bitSet<8> b;
     auto ref = b[3];
 
@@ -161,7 +180,6 @@ TEST(referenceTest, copy_assignement_operator) {
 }
 
 TEST(referenceTest, bool_operator) {
-    std::byte byte = std::byte{ 0 };
     bitSet<8> b;
     auto ref = b[3]; 
 
@@ -173,7 +191,6 @@ TEST(referenceTest, bool_operator) {
 }
 
 TEST(referenceTest, flip) {
-    std::byte byte = std::byte{ 0 };
     bitSet<8> b;
     auto ref = b[3]; 
 

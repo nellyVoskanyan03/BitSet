@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../include/bitset.h"
 #include <vector>
+#include "../include/bitset.h"
 
 template <std::size_t N>
 std::vector<bitSet<N>> getCombination(const std::vector<bitSet<N>>& numbers, int num) {

@@ -1,10 +1,4 @@
-#include <string_view>
-#include <iostream>
 #include <string>
-#include <stdexcept>
-#include <climits>
-#include <sstream>
-#include <bitset>
 #include <cstddef>
 
 #ifndef BBITSET_H
@@ -26,6 +20,9 @@ public:
 	private:
 		std::byte& byte;
 		std::size_t bit_pos;
+
+		static std::size_t getBytePosFromPos(std::size_t pos);
+		static std::size_t getBitPosFromPos(std::size_t pos);
 
 		reference(std::byte& byte_ref, std::size_t bit_pos);
 

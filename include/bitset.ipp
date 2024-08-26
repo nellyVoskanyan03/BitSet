@@ -1,7 +1,7 @@
 #include <string>
 #include <cstddef>
 
-// Binary operators
+// Non-member functions
 template <std::size_t N>
 bitSet<N> operator&(bitSet<N> lhs, const bitSet<N>& rhs) {
 	lhs &= rhs;
@@ -20,16 +20,21 @@ bitSet<N> operator^(bitSet<N> lhs, const bitSet<N>& rhs) {
 	return lhs;
 }
 
-template <std::size_t N>
-bitSet<N> operator<<(bitSet<N> lhs, std::size_t shift) {
-	lhs <<= shift;
-	return lhs;
+template<std::size_t N>
+std::ostream& operator<<(std::ostream& os, const bitSet<N>& bs) {
+	for (std::size_t i = N; i > 0; --i) {
+		os << static_cast<bool>(bs[(i - 1)]);
+	}
+	return os;
 }
 
-template <std::size_t N>
-bitSet<N> operator>>(bitSet<N> lhs, std::size_t shift) {
-	lhs >>= shift;
-	return lhs;
+template<std::size_t N>
+std::istream& operator>>(std::istream& is, bitSet<N>& bs) {
+	std::string input;
+	is >> input;
+
+	bs = bitSet<N>(input);
+	return is;
 }
 
 // Constructors
@@ -156,7 +161,7 @@ bool bitSet<N>::operator!=(const bitSet& rhs) const {
 	return false;
 }
 
-// binary assignment operators
+// Binary assignment operators
 template<std::size_t N>
 bitSet<N>& bitSet<N>::operator&=(const bitSet<N>& other) {
 	for (int i = 0; i < NUM_BYTES; ++i) {
@@ -181,7 +186,7 @@ bitSet<N>& bitSet<N>::operator^=(const bitSet<N>& other) {
 	return *this;
 }
 
-//binary operators (with numbers)
+// Binary operators
 template<std::size_t N>
 bitSet<N> bitSet<N>::operator~() const {
 	bitSet<N> result;
@@ -290,25 +295,6 @@ std::string bitSet<N>::to_string() {
 	}
 	return result;
 }
-
-// Stream input and output operators
-template<std::size_t N>
-std::ostream& operator<<(std::ostream& os, const bitSet<N>& bs) {
-	for (std::size_t i = N; i > 0; --i) {
-		os << static_cast<bool>(bs[(i - 1)]);
-	}
-	return os;
-}
-
-template<std::size_t N>
-std::istream& operator>>(std::istream& is, bitSet<N>& bs) {
-	std::string input;
-	is >> input;
-
-	bs = bitSet<N>(input);
-	return is;
-}
-
 
 // Reference
 template<std::size_t N>
